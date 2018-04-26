@@ -9,10 +9,10 @@ export interface Action<TPayload> {
   type: string;
 }
 
-export interface ActionClass<TStore, TPayload> {
+export interface ActionFunction<TStore, TPayload> {
   (payload: TPayload): Action<TPayload>;
   toString(): string;
-  toMutation(store: Readonly<TStore>, payload: Readonly<TPayload>): Readonly<TStore>;
+  toMutation(store: TStore, payload: TPayload): TStore;
 }
 
 let actionIncrementalIndex = 1;
@@ -23,20 +23,20 @@ function createPayloadFunction<TPayload>(type: string) {
   };
 }
 
-export function createReducerAction<TStore, TPayload>(
+function createReducerAction<TStore, TPayload>(
   mutation: MutationFunction<TStore, TPayload>,
-): ActionClass<TStore, TPayload> {
+): ActionFunction<TStore, TPayload> {
   // add any due to typescript not seeing name property of function
   const type = `${actionIncrementalIndex++}.${(mutation as any).name}`;
-  const action = createPayloadFunction(type) as ActionClass<TStore, TPayload>;
+  const action = createPayloadFunction(type) as ActionFunction<TStore, TPayload>;
   action.toString = () => type;
   action.toMutation = mutation;
   return action;
 }
 
-export function combineActions<TStore>(
+function combineActions<TStore>(
   initialState: Readonly<TStore>,
-  reducers: Array<ActionClass<TStore, any>>,
+  reducers: Array<ActionFunction<TStore, any>>,
 ) {
   const mutations = reducers.reduce<MutationMap<TStore>>(
     (previousValue, currentValue) => {
@@ -56,3 +56,5 @@ export function combineActions<TStore>(
     }
   };
 }
+
+export { createReducerAction, combineActions };
