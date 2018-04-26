@@ -10,28 +10,28 @@ export interface Action<TPayload> {
 }
 
 export interface ActionClass<TStore, TPayload> {
-  new (payload: TPayload): Action<TPayload>;
+  (payload: TPayload): Action<TPayload>;
   toString(): string;
   toMutation(store: Readonly<TStore>, payload: Readonly<TPayload>): Readonly<TStore>;
 }
 
 let actionIncrementalIndex = 1;
 
+function createPayloadFunction<TPayload>(type: string) {
+  return (payload: TPayload) => {
+    return { payload, type };
+  };
+}
+
 export function createReducerAction<TStore, TPayload>(
   mutation: MutationFunction<TStore, TPayload>,
 ): ActionClass<TStore, TPayload> {
   // add any due to typescript not seeing name property of function
   const type = `${actionIncrementalIndex++}.${(mutation as any).name}`;
-  return class {
-    static toString() {
-      return type;
-    }
-    static toMutation(store: Readonly<TStore>, payload: Readonly<TPayload>) {
-      return mutation(store, payload);
-    }
-    public type: string = type;
-    constructor(public payload: Readonly<TPayload>) {}
-  };
+  const action = createPayloadFunction(type) as ActionClass<TStore, TPayload>;
+  action.toString = () => type;
+  action.toMutation = mutation;
+  return action;
 }
 
 export function combineActions<TStore>(

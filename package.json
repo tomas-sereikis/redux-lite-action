@@ -1,6 +1,6 @@
 {
   "name": "redux-lite-action",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -10,6 +10,9 @@
     "build": "tsc && node typings",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "test": "jest"
+  },
+  "dependencies": {
+    "redux": "^4.0.0"
   },
   "devDependencies": {
     "@types/jest": "^22.2.3",

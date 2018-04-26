@@ -35,7 +35,7 @@ const initialState: Readonly<Reducer> = {
   b: false,
 };
 
-export const MutationActionA = createReducerAction(
+export const mutationActionA = createReducerAction(
   // name your action function which will be used as a action name witch 
   // id prefix in front of name function name, this will prevent same action names
   // when function name is duplicated 
@@ -44,22 +44,22 @@ export const MutationActionA = createReducerAction(
   },
 );
 
-export const MutationActionB = createReducerAction(
+export const mutationActionB = createReducerAction(
   function actionMutationB(store: Reducer, payload: PayloadB) {
     return { ...store, b: payload.b };
   },
 );
 
 export const reducer = combineActions(initialState, [
-  MutationActionA,
-  MutationActionB,
+  mutationActionA,
+  mutationActionB,
 ]);
 ```
 
 Some point here you use your action.
 ```typescript
-import { MutationActionA, MutationActionB } from './reducer';
+import { mutationActionA, mutationActionB } from './reducer';
 
-dispatch(new MutationActionA({ a: true }));
-dispatch(new MutationActionB({ b: true }));
+dispatch(mutationActionA({ a: true }));
+dispatch(mutationActionB({ b: true }));
 ```
