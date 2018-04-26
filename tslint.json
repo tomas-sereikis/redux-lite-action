@@ -1,0 +1,25 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "quotemark": [true, "single"],
+    "no-console": [false],
+    "no-require-imports": false,
+    "no-var-requires": false,
+    "no-empty-interface": false,
+    "max-classes-per-file": [false],
+    "member-access": false,
+    "semicolon": [true, "always"],
+    "interface-name": [true, "never-prefix"],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "any",
+        "named-imports-order": "lowercase-first"
+      }
+    ]
+  },
+  "rulesDirectory": []
+}
