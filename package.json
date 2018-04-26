@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "prepublish": "yarn build",
+    "prepare": "yarn build",
     "prettier": "prettier --config package.json --write 'src/**/*.ts' 'tests/**/*.ts'",
     "build": "tsc && node typings",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",

@@ -1,14 +1,21 @@
-## WIP: redux-lite-actions
+## Redux Lite Action
 
-Redux lite actions solves issues that you need to define redux action names mutation functions separately.
-`redux-lite-actions` whats to simplify that process in just writing the mutation functions which can
+#### Install
+
+Install via npm `npm install react-lite-action` or yarn `yarn add react-lite-action`. 
+Typescript typings are includes into package :). 
+
+#### Usage
+
+Redux lite action solves issues that you need to define redux action names mutation functions separately.
+`redux-lite-action` whats to simplify that process in just writing the mutation functions which can
 be used as a action.
 
 For example lets create a simple reducer which couple actions.
 
 Reducer file.
 ```typescript
-import { combineActions, createReducerAction } from 'redux-lite-actions';
+import { combineActions, createReducerAction } from 'redux-lite-action';
 
 interface Reducer {
   a: boolean;
