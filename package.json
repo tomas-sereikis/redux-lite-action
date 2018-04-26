@@ -1,8 +1,8 @@
 {
   "name": "redux-lite-action",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "prepublish": "yarn build",
@@ -11,13 +11,10 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "test": "jest"
   },
-  "dependencies": {
-    "dts-generator": "^2.1.0",
-    "redux": "^4.0.0"
-  },
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/redux": "^3.6.0",
+    "dts-generator": "^2.1.0",
     "jest": "^22.4.3",
     "prettier": "^1.12.1",
     "ts-jest": "^22.4.4",
