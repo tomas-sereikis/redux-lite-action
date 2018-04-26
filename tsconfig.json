@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
+    "outDir": "dist",
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": true,
@@ -11,5 +12,11 @@
     "alwaysStrict": true,
     "allowJs": false,
     "types": ["jest"]
-  }
+  },
+  "files": [
+    "./src/index.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -1,15 +1,18 @@
-type MutationFunction<TStore, TPayload> = (store: TStore, payload: TPayload) => TStore;
+export type MutationFunction<TStore, TPayload> = (
+  store: TStore,
+  payload: TPayload,
+) => TStore;
 
-interface MutationMap<TStore> {
+export interface MutationMap<TStore> {
   [type: string]: MutationFunction<TStore, any>;
 }
 
-interface Action<TPayload> {
+export interface Action<TPayload> {
   payload: Readonly<TPayload>;
   type: string;
 }
 
-interface ActionClass<TStore, TPayload> {
+export interface ActionClass<TStore, TPayload> {
   new (payload: TPayload): Action<TPayload>;
   toString(): string;
   toMutation(store: Readonly<TStore>, payload: Readonly<TPayload>): Readonly<TStore>;

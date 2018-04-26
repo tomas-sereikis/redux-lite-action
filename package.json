@@ -1,12 +1,17 @@
 {
   "name": "redux-lite-action",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "scripts": {
+    "prepublish": "yarn build",
+    "build": "tsc && node typings",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "test": "jest"
   },
   "dependencies": {
+    "dts-generator": "^2.1.0",
     "redux": "^4.0.0"
   },
   "devDependencies": {
