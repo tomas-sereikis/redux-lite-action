@@ -1,7 +1,4 @@
-export type MutationFunction<TStore, TPayload> = (
-  store: TStore,
-  payload: TPayload,
-) => TStore;
+export type MutationFunction<TStore, TPayload> = (store: TStore, payload: TPayload) => TStore;
 
 export interface MutationMap<TStore> {
   [type: string]: MutationFunction<TStore, any>;
@@ -33,8 +30,7 @@ export function createReducerAction<TStore, TPayload>(
       return mutation(store, payload);
     }
     public type: string = type;
-    constructor(public payload: Readonly<TPayload>) {
-    }
+    constructor(public payload: Readonly<TPayload>) {}
   };
 }
 
@@ -49,7 +45,7 @@ export function combineActions<TStore>(
         [currentValue.toString()]: currentValue.toMutation,
       };
     },
-    { } as MutationMap<TStore>,
+    {} as MutationMap<TStore>,
   );
   return (store: TStore = initialState, action: Action<any>): TStore => {
     const mutation = mutations[action.type];

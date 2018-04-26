@@ -18,17 +18,19 @@ const initialState: Readonly<Reducer> = {
   b: false,
 };
 
-const MutationActionA = createReducerAction(
-  function actionMutationA(store: Reducer, payload: PayloadA) {
-    return { ...store, a: payload.a };
-  },
-);
+const MutationActionA = createReducerAction(function actionMutationA(
+  store: Reducer,
+  payload: PayloadA,
+) {
+  return { ...store, a: payload.a };
+});
 
-const MutationActionB = createReducerAction(
-  function actionMutationB(store: Reducer, payload: PayloadB) {
-    return { ...store, b: payload.b };
-  },
-);
+const MutationActionB = createReducerAction(function actionMutationB(
+  store: Reducer,
+  payload: PayloadB,
+) {
+  return { ...store, b: payload.b };
+});
 
 it('should check if action a class was created', () => {
   const action = new MutationActionA({ a: true });
@@ -47,10 +49,7 @@ it('should check if action b class was created', () => {
 });
 
 it('should combine action', () => {
-  const reducer = combineActions(initialState, [
-    MutationActionA,
-    MutationActionB,
-  ]);
+  const reducer = combineActions(initialState, [MutationActionA, MutationActionB]);
   const state1 = reducer(undefined, new MutationActionA({ a: true }));
   const state2 = reducer(state1, new MutationActionB({ b: true }));
   expect(state2).toEqual({ a: true, b: true });
