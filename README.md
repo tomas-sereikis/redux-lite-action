@@ -1,11 +1,11 @@
 ## Redux Lite Action
 
-#### Install
+### Install
 
-Install via npm `npm install react-lite-action` or yarn `yarn add react-lite-action`. 
-Typescript typings are includes into package :). 
+Install via npm `npm install redux-lite-action` or yarn `yarn add redux-lite-action`. 
+Typescript typings are includes into package.
 
-#### Usage
+### Usage
 
 Redux lite action solves issues that you need to define redux action names mutation functions separately.
 `redux-lite-action` whats to simplify that process in just writing the mutation functions which can
