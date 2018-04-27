@@ -41,10 +41,7 @@ const mutationActionB = createReducerAction(function actionMutationB(
   };
 });
 
-const mutationActionC = createReducerAction(function actionMutationC(
-  store: Reducer,
-  payload: undefined,
-) {
+const mutationActionC = createReducerAction(function actionMutationC(store: Reducer) {
   return {
     ...store,
     c: true,
@@ -76,11 +73,11 @@ it('should check if action b class was created', () => {
 });
 
 it('should check if action c class was created', () => {
-  const action = mutationActionC(undefined);
+  const action = mutationActionC();
   expect(action.payload).toEqual(undefined);
   expect(action.type).toEqual('3.actionMutationC');
   expect(mutationActionC.toString()).toEqual('3.actionMutationC');
-  expect(mutationActionC.toMutation(initialState, action.payload)).toEqual({
+  expect(mutationActionC.toMutation(initialState)).toEqual({
     a: false,
     b: false,
     c: true,
@@ -91,7 +88,7 @@ it('should combine action', () => {
   const reducer = combineActions(initialState, [mutationActionA, mutationActionB, mutationActionC]);
   const state1 = reducer(undefined, mutationActionA({ a: true }));
   const state2 = reducer(state1, mutationActionB({ b: true }));
-  const state3 = reducer(state2, mutationActionC(undefined));
+  const state3 = reducer(state2, mutationActionC());
   expect(state3).toEqual({
     a: true,
     b: true,
@@ -125,7 +122,7 @@ it('should create redux store and fire an action', () => {
       c: false,
     },
   });
-  store.dispatch(mutationActionC(undefined));
+  store.dispatch(mutationActionC());
   expect(store.getState()).toEqual({
     reducer: {
       a: true,

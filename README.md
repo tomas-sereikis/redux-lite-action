@@ -20,6 +20,7 @@ import { combineActions, createReducerAction } from 'redux-lite-action';
 interface Reducer {
   a: boolean;
   b: boolean;
+  c: boolean;
 }
 
 interface PayloadA {
@@ -33,6 +34,7 @@ interface PayloadB {
 const initialState: Readonly<Reducer> = {
   a: false,
   b: false,
+  c: false,
 };
 
 export const mutationActionA = createReducerAction(
@@ -50,40 +52,32 @@ export const mutationActionB = createReducerAction(
   },
 );
 
+// you can not pass payload then it will be treated as undefined
+// and then when calling action you will not need to pass argument
+export const mutationActionC = createReducerAction(
+  function actionMutationC(store: Reducer) {
+    return { ...store, c: true };
+  },
+);
+
 export const reducer = combineActions(initialState, [
   mutationActionA,
   mutationActionB,
+  mutationActionC,
 ]);
 ```
 
 Some point here you use your action.
 ```typescript
-import { mutationActionA, mutationActionB } from './reducer';
+import { 
+  mutationActionA, 
+  mutationActionB,
+  mutationActionC,
+} from './reducer';
 
 dispatch(mutationActionA({ a: true }));
 dispatch(mutationActionB({ b: true }));
-```
-
-#### Issues
-
-When using action without a payload it gets tricky due to typescript typings but it should be
-resolved one way or another.
-
-Example
-
-```typescript
-// we need to default that out payload is undefined
-const mutationActionC = createReducerAction(function actionMutationC(
-  store: Reducer,
-  payload: undefined,
-) {
-  return {
-    ...store,
-    c: true,
-  };
-});
-
-// then later on we have to call with undefined payload 
-// while it just should be as a empty parameter
-dispatch(mutationActionC(undefined));
+// since payload is not defined then we do
+// not need it to pass as a param
+dispatch(mutationActionC());
 ```

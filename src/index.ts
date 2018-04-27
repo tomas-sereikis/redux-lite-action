@@ -1,4 +1,5 @@
 export type MutationFunction<TStore, TPayload> = (store: TStore, payload: TPayload) => TStore;
+export type MutationVoidFunction<TStore> = (store: TStore) => TStore;
 
 export interface MutationMap<TStore> {
   [type: string]: MutationFunction<TStore, any>;
@@ -15,22 +16,38 @@ export interface ActionFunction<TStore, TPayload> {
   toMutation(store: TStore, payload: TPayload): TStore;
 }
 
-let actionIncrementalIndex = 1;
-
-function createPayloadFunction<TPayload>(type: string) {
-  return (payload: TPayload) => {
-    return { payload, type };
-  };
+export interface ActionVoidFunction<TStore> {
+  (): Action<undefined>;
+  toString(): string;
+  toMutation(store: TStore): TStore;
 }
 
+let actionIncrementalIndex = 1;
+
+function payloadFunction<TPayload>(type: string) {
+  return (payload: TPayload) => ({
+    payload,
+    type,
+  });
+}
+
+// this definition is for when payload is void and so user
+// dose not have to pass action argument
+function createReducerAction<TStore>(
+  toMutation: MutationVoidFunction<TStore>,
+): ActionVoidFunction<TStore>;
+// this definition is for when payload has its typing required
 function createReducerAction<TStore, TPayload>(
-  mutation: MutationFunction<TStore, TPayload>,
+  toMutation: MutationFunction<TStore, TPayload>,
+): ActionFunction<TStore, TPayload>;
+function createReducerAction<TStore, TPayload>(
+  toMutation: MutationFunction<TStore, TPayload>,
 ): ActionFunction<TStore, TPayload> {
   // add any due to typescript not seeing name property of function
-  const type = `${actionIncrementalIndex++}.${(mutation as any).name}`;
-  const action = createPayloadFunction(type) as ActionFunction<TStore, TPayload>;
+  const type = `${actionIncrementalIndex++}.${(toMutation as any).name}`;
+  const action = payloadFunction(type) as ActionFunction<TStore, TPayload>;
   action.toString = () => type;
-  action.toMutation = mutation;
+  action.toMutation = toMutation;
   return action;
 }
 
@@ -39,13 +56,13 @@ function combineActions<TStore>(
   reducers: Array<ActionFunction<TStore, any>>,
 ) {
   const mutations = reducers.reduce<MutationMap<TStore>>(
-    (previousValue, currentValue) => {
+    (previous: MutationMap<TStore>, current: ActionFunction<TStore, any>) => {
       return {
-        ...previousValue,
-        [currentValue.toString()]: currentValue.toMutation,
+        ...previous,
+        [current.toString()]: current.toMutation,
       };
     },
-    {} as MutationMap<TStore>,
+    {},
   );
   return (store: TStore = initialState, action: Action<any>): TStore => {
     const mutation = mutations[action.type];
