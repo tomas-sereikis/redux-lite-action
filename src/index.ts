@@ -65,7 +65,7 @@ export function createReducerAction<TStore, TPayload>(
  * You need to pass initial reducer state and actions list.
  */
 export function combineActions<TStore>(
-  initialState: Readonly<TStore>,
+  initialState: TStore,
   actions: Array<ActionMut<TStore, any>>,
 ) {
   const mutations = actions.reduce<MutationMap<TStore>>(
