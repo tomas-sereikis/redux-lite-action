@@ -5,11 +5,12 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "prepare": "yarn build",
-    "prettier": "prettier --config package.json --write 'src/**/*.ts' 'tests/**/*.ts'",
-    "build": "tsc && node typings",
-    "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test": "jest"
+    "prepare": "tsc && prettier --config package.json --write dist/index.d.ts",
+    "prettier": "prettier --config package.json --write '{src,tests}/**/*.ts'",
+    "test": "run-s test:*",
+    "test:build": "tsc --noEmit src/index.ts tests/index.spec.ts",
+    "test:lint": "tslint -c tslint.json '{src,tests}/**/*.ts'",
+    "test:unit": "jest"
   },
   "dependencies": {
     "redux": "^4.0.0"
@@ -17,8 +18,8 @@
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/redux": "^3.6.0",
-    "dts-generator": "^2.1.0",
     "jest": "^22.4.3",
+    "npm-run-all": "^4.1.2",
     "prettier": "^1.12.1",
     "ts-jest": "^22.4.4",
     "tslint": "^5.9.1",

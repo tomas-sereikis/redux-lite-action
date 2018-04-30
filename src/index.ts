@@ -1,22 +1,24 @@
-export type MutationFunction<TStore, TPayload> = (store: TStore, payload: TPayload) => TStore;
-export type MutationVoidFunction<TStore> = (store: TStore) => TStore;
-
-export interface MutationMap<TStore> {
-  [type: string]: MutationFunction<TStore, any>;
+interface MutationMap<TStore> {
+  [type: string]: (store: TStore, payload: any) => TStore;
 }
 
+/**
+ * Action type interface. This is a standard interface for an action
+ * that has a name which is under `type` property and a payload
+ * that is a Readonly property.
+ */
 export interface Action<TPayload> {
   payload: Readonly<TPayload>;
   type: string;
 }
 
-export interface ActionFunction<TStore, TPayload> {
+export interface ActionMut<TStore, TPayload> {
   (payload: TPayload): Action<TPayload>;
   toString(): string;
   toMutation(store: TStore, payload: TPayload): TStore;
 }
 
-export interface ActionVoidFunction<TStore> {
+export interface ActionMutNoPayload<TStore> {
   (): Action<undefined>;
   toString(): string;
   toMutation(store: TStore): TStore;
@@ -31,32 +33,43 @@ function payloadFunction<TPayload>(type: string) {
   });
 }
 
-// this definition is for when payload is void and so user
-// dose not have to pass action argument
-function createReducerAction<TStore>(
-  toMutation: MutationVoidFunction<TStore>,
-): ActionVoidFunction<TStore>;
-// this definition is for when payload has its typing required
-function createReducerAction<TStore, TPayload>(
-  toMutation: MutationFunction<TStore, TPayload>,
-): ActionFunction<TStore, TPayload>;
-function createReducerAction<TStore, TPayload>(
-  toMutation: MutationFunction<TStore, TPayload>,
-): ActionFunction<TStore, TPayload> {
+/**
+ * Reducer action creates an action that also contains a reducer mutation
+ * function in it. You this one if your reducer mutation function dose not
+ * have a payload.
+ */
+export function createReducerAction<TStore>(
+  toMutation: (store: TStore) => TStore,
+): ActionMutNoPayload<TStore>;
+/**
+ * Reducer action creates an action that also contains a reducer mutation
+ * function in it. You this one if your reducer mutation function has a payload.
+ * Otherwise do not set payload type.
+ */
+export function createReducerAction<TStore, TPayload>(
+  toMutation: (store: TStore, payload: TPayload) => TStore,
+): ActionMut<TStore, TPayload>;
+export function createReducerAction<TStore, TPayload>(
+  toMutation: (store: TStore, payload: TPayload) => TStore,
+): ActionMut<TStore, TPayload> {
   // add any due to typescript not seeing name property of function
   const type = `${actionIncrementalIndex++}.${(toMutation as any).name}`;
-  const action = payloadFunction(type) as ActionFunction<TStore, TPayload>;
+  const action = payloadFunction(type) as ActionMut<TStore, TPayload>;
   action.toString = () => type;
   action.toMutation = toMutation;
   return action;
 }
 
-function combineActions<TStore>(
+/**
+ * Combine actions method connects multiple actions into single reducer.
+ * You need to pass initial reducer state and actions list.
+ */
+export function combineActions<TStore>(
   initialState: Readonly<TStore>,
-  reducers: Array<ActionFunction<TStore, any>>,
+  actions: Array<ActionMut<TStore, any>>,
 ) {
-  const mutations = reducers.reduce<MutationMap<TStore>>(
-    (previous: MutationMap<TStore>, current: ActionFunction<TStore, any>) => {
+  const mutations = actions.reduce<MutationMap<TStore>>(
+    (previous: MutationMap<TStore>, current: ActionMut<TStore, any>) => {
       return {
         ...previous,
         [current.toString()]: current.toMutation,
@@ -73,5 +86,3 @@ function combineActions<TStore>(
     }
   };
 }
-
-export { createReducerAction, combineActions };
