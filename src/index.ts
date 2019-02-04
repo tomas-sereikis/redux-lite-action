@@ -40,6 +40,7 @@ function payloadFunction<TPayload>(type: string) {
  */
 export function createReducerAction<TStore>(
   toMutation: (store: TStore) => TStore,
+  name?: string,
 ): ActionMutNoPayload<TStore>;
 /**
  * Reducer action creates an action that also contains a reducer mutation
@@ -48,12 +49,14 @@ export function createReducerAction<TStore>(
  */
 export function createReducerAction<TStore, TPayload>(
   toMutation: (store: TStore, payload: TPayload) => TStore,
+  name?: string,
 ): ActionMut<TStore, TPayload>;
 export function createReducerAction<TStore, TPayload>(
   toMutation: (store: TStore, payload: TPayload) => TStore,
+  name?: string,
 ): ActionMut<TStore, TPayload> {
   // add any due to typescript not seeing name property of function
-  const type = `${actionIncrementalIndex++}.${(toMutation as any).name}`;
+  const type = name ? name : `${actionIncrementalIndex++}.${(toMutation as any).name}`;
   const action = payloadFunction(type) as ActionMut<TStore, TPayload>;
   action.toString = () => type;
   action.toMutation = toMutation;

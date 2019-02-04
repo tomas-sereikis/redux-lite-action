@@ -6,6 +6,7 @@ interface Reducer {
   b: boolean;
   c: boolean;
   d: boolean | number;
+  e: boolean;
 }
 
 interface PayloadA {
@@ -23,6 +24,7 @@ const initialState: Readonly<Reducer> = {
   b: false,
   c: false,
   d: false,
+  e: false,
 };
 
 const mutationActionA = createReducerAction(function actionMutationA(
@@ -65,6 +67,17 @@ const mutationActionD = createReducerAction(function actionMutationD(
   };
 });
 
+const mutationActionE = createReducerAction((store: Reducer) => {
+  return {
+    ...store,
+    e: true,
+  };
+}, 'actionMutationE');
+
+it('should check if named reducer action is with a right name', () => {
+  expect(mutationActionE.toString()).toBe('actionMutationE');
+});
+
 it('should check if action a class was created', () => {
   const action = mutationActionA({ a: true });
   expect(action.payload).toEqual({ a: true });
@@ -75,6 +88,7 @@ it('should check if action a class was created', () => {
     b: false,
     c: false,
     d: false,
+    e: false,
   });
 });
 
@@ -88,6 +102,7 @@ it('should check if action b class was created', () => {
     b: true,
     c: false,
     d: false,
+    e: false,
   });
 });
 
@@ -101,6 +116,7 @@ it('should check if action c class was created', () => {
     b: false,
     c: true,
     d: false,
+    e: false,
   });
 });
 
@@ -110,16 +126,19 @@ it('should combine action', () => {
     mutationActionB,
     mutationActionC,
     mutationActionD,
+    mutationActionE,
   ]);
   const state1 = reducer(undefined, mutationActionA({ a: true }));
   const state2 = reducer(state1, mutationActionB({ b: true }));
   const state3 = reducer(state2, mutationActionC());
   const state4 = reducer(state3, mutationActionD(true));
-  expect(state4).toEqual({
+  const state5 = reducer(state4, mutationActionE());
+  expect(state5).toEqual({
     a: true,
     b: true,
     c: true,
     d: true,
+    e: true,
   });
 });
 
@@ -137,6 +156,7 @@ it('should create redux store and fire an action', () => {
       b: false,
       c: false,
       d: false,
+      e: false,
     },
   });
   store.dispatch(mutationActionA({ a: true }));
@@ -146,6 +166,7 @@ it('should create redux store and fire an action', () => {
       b: false,
       c: false,
       d: false,
+      e: false,
     },
   });
   store.dispatch(mutationActionB({ b: true }));
@@ -155,6 +176,7 @@ it('should create redux store and fire an action', () => {
       b: true,
       c: false,
       d: false,
+      e: false,
     },
   });
   store.dispatch(mutationActionC());
@@ -164,6 +186,7 @@ it('should create redux store and fire an action', () => {
       b: true,
       c: true,
       d: false,
+      e: false,
     },
   });
   store.dispatch(mutationActionD(1));
@@ -173,6 +196,7 @@ it('should create redux store and fire an action', () => {
       b: true,
       c: true,
       d: 1,
+      e: false,
     },
   });
 });

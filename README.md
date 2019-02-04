@@ -53,11 +53,13 @@ export const mutationActionB = createReducerAction(
 );
 
 // you can not pass payload then it will be treated as undefined
-// and then when calling action you will not need to pass argument
+// and then when calling action you will not need to pass argument.
+// also note that name cal be passed as a parameter
 export const mutationActionC = createReducerAction(
-  function actionMutationC(store: Reducer) {
+  (store: Reducer) => {
     return { ...store, c: true };
   },
+  'actionMutationC',
 );
 
 export const reducer = combineActions(initialState, [
